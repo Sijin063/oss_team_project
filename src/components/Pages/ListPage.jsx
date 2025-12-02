@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { searchMeals, filterByArea } from "../api";
+import { searchMeals, filterByArea, createMenu } from "../api";
 
 function ListPage() {
   const [meals, setMeals] = useState([]);
@@ -10,7 +10,6 @@ function ListPage() {
 
   const navigate = useNavigate();
 
-  // 최초 로딩 시 기본 검색
   useEffect(() => {
     loadMeals();
   }, []);
@@ -27,14 +26,33 @@ function ListPage() {
     }
   };
 
-  const handleSearch = () => {
-    loadMeals();
-  };
+  const handleSearch = () => loadMeals();
 
   const handleFilter = async () => {
     if (!area) return alert("나라를 입력하세요");
     const data = await filterByArea(area);
     setMeals(data);
+  };
+
+  // ✅ ADD 버튼 기능
+  const handleAdd = async (meal) => {
+    const newItem = {
+      Name: meal.strMeal,
+      Country: meal.strArea || "Unknown",
+      Difficulty: "Unknown",
+      CookingTime: "Unknown",
+      SpicyLevel: "Medium",
+      MealorDessert: "Meal",
+      CookingMethod: meal.strCategory || "Other"
+    };
+
+    try {
+      await createMenu(newItem);
+      alert("My Recipe List에 저장했습니다!");
+      navigate("/mylist");
+    } catch (e) {
+      alert("저장 실패");
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -84,7 +102,7 @@ function ListPage() {
             <th>Recipe Name</th>
             <th>Country</th>
             <th>Category</th>
-            <th>Detail</th>
+            <th>Action</th> {/* ✅ 변경 */}
           </tr>
         </thead>
         <tbody>
@@ -98,10 +116,10 @@ function ListPage() {
               <td>{m.strCategory || "-"}</td>
               <td>
                 <button
-                  className="btn btn-sm btn-info"
-                  onClick={() => navigate(`/detail?mealId=${m.idMeal}`)}
+                  className="btn btn-sm btn-success"
+                  onClick={() => handleAdd(m)}
                 >
-                  View
+                  ADD
                 </button>
               </td>
             </tr>
