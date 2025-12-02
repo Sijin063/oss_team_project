@@ -30,11 +30,13 @@ function DetailPage() {
       <div className="card mt-3">
         <div className="card-body">
           <h5 className="card-title">{item.name}</h5>
-            <p><strong>Name:</strong> {item.MenuName}</p>
-            <p><strong>Category:</strong> {item.Category}</p>
-            <p><strong>Price:</strong> ${item.Price}</p>
-            <p><strong>Status:</strong> {item.Status}</p>
-
+            <p><strong>Name:</strong> {item.Name}</p>
+            <p><strong>Difficulty:</strong> {item.Difficulty}</p>
+            <p><strong>Country:</strong> {item.Country}</p>
+            <p><strong>Spicy Level:</strong> {item.SpicyLevel}</p>
+            <p><strong>Cooking Time:</strong> {item.CookingTime}</p>
+            <p><strong>Meal or Dessert:</strong> {item.MealorDessert}</p>
+            <p><strong>Cooking Method:</strong> {item.CookingMethod}</p>
         </div>
       </div>
       <button className="btn btn-secondary mt-3" onClick={() => navigate(-1)}>

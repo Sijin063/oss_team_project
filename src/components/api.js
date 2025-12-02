@@ -1,4 +1,4 @@
-export const API_URL = "https://690c2aa16ad3beba00f780e7.mockapi.io/mydata/RestaurantMenu";
+export const API_URL = "https://692d24dde5f67cd80a4a3fea.mockapi.io/Recipies";
 
 export async function fetchMenus() {
   const res = await fetch(API_URL);

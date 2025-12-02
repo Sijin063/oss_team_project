@@ -5,12 +5,20 @@ import { createMenu } from "../api";
 function CreatePage() {
 
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
-  const [status, setStatus] = useState("");
+  const [Difficulty, setDifficulty] = useState("");
+  const [Country, setCountry] = useState("");
+  const [SpicyLevel, setSpicyLevel] = useState("");
+  const [CookingTime, setCookingTime] = useState("");
+  const [MealorDessert, setMealorDessert] = useState("");
+  const [CookingMethod, setCookingMethod] = useState("");
 
   const nameRef = useRef(null);
-  const priceRef = useRef(null);
+  const DiffRef = useRef(null);
+  const CountRef = useRef(null);
+  const SpiceRef = useRef(null);
+  const TimeRef = useRef(null);
+  const MealRef = useRef(null);
+  const MethodRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -23,17 +31,50 @@ function CreatePage() {
       return;
     }
 
-    if (!price || Number(price) <= 0) {
-      alert("Price는 0보다 큰 값이어야 합니다.");
-      priceRef.current?.focus();
+    if (!Difficulty.trim()) {
+      alert("요리 난이도를 입력하세요.");
+      DiffRef.current?.focus();
+      return;
+    }
+
+    if (!Country.trim()) {
+      alert("요리 난이도를 입력하세요.");
+      CountRef.current?.focus();
+      return;
+    }
+
+    if (!SpicyLevel.trim()) {
+      alert("매운맛 정도를 입력하세요.");
+      SpiceRef.current?.focus();
+      return;
+    }
+
+    if (!CookingTime.trim()) {
+      alert("요리 시간을 입력하세요.");
+      TimeRef.current?.focus();
+      return;
+    }
+
+    if (!MealorDessert.trim()) {
+      alert("식사 또는 디저트를 입력하세요.");
+      MealRef.current?.focus();
+      return;
+    }
+
+    if (!CookingMethod.trim()) {
+      alert("조리 방법을 입력하세요.");
+      MethodRef.current?.focus();
       return;
     }
 
     const newItem = {
-        MenuName: name,
-        Category: category,
-        Price: Number(price),
-        Status: status
+        Name: name,
+        Difficulty: Difficulty,
+        Country: Country,
+        SpicyLevel: SpicyLevel,
+        CookingTime: CookingTime,
+        MealorDessert: MealorDessert,
+        CookingMethod: CookingMethod,
     };
 
     
@@ -62,35 +103,71 @@ function CreatePage() {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Category</label>
+          <label className="form-label">Difficulty</label>
           <input
+            ref={DiffRef} 
             type="text"
             className="form-control"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={Difficulty}
+            onChange={(e) => setDifficulty(e.target.value)} 
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Price</label>
+          <label className="form-label">Country</label>
           <input
-            ref={priceRef} 
-            type="number"
+            ref={CountRef} 
+            type="text"
             className="form-control"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            value={Country}
+            onChange={(e) => setCountry(e.target.value)} 
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Status</label>
+          <label className="form-label">Spicy Level</label>
           <input
+            ref={SpiceRef} 
             type="text"
             className="form-control"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            value={SpicyLevel}
+            onChange={(e) => setSpicyLevel(e.target.value)} 
           />
         </div>
+
+        <div className="mb-3">
+          <label className="form-label">Cooking Time</label>
+          <input
+            ref={TimeRef} 
+            type="text"
+            className="form-control"
+            value={CookingTime}
+            onChange={(e) => setCookingTime(e.target.value)} 
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Meal or Dessert</label>
+          <input
+            ref={MealRef} 
+            type="text"
+            className="form-control"
+            value={MealorDessert}
+            onChange={(e) => setMealorDessert(e.target.value)} 
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Cooking Method</label>
+          <input
+            ref={MethodRef} 
+            type="text"
+            className="form-control"
+            value={CookingMethod}
+            onChange={(e) => setCookingMethod(e.target.value)} 
+          />
+        </div>
+
 
         <button type="submit" className="btn btn-primary me-2">
           Save

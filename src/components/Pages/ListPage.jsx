@@ -50,9 +50,9 @@ function ListPage() {
           <tr>
             <th>ID</th>
             <th>Menu Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Status</th>
+            <th>Difficulty</th>
+            <th>Cooking Time</th>
+            <th>Cooking Method</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -60,10 +60,10 @@ function ListPage() {
         {items.map((m) => (
             <tr key={m.id}>
             <td>{m.id}</td>
-            <td>{m.MenuName}</td>
-            <td>{m.Category}</td>
-            <td>${m.Price}</td>
-            <td>{m.Status}</td>
+            <td>{m.Name}</td>
+            <td>{m.Difficulty}</td>
+            <td>${m.CookingTime}</td>
+            <td>{m.CookingMethod}</td>
             <td>
                 <button
                   className="btn btn-sm btn-info me-2"

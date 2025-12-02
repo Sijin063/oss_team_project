@@ -11,7 +11,13 @@ function UpdatePage() {
   const [changeCount, setChangeCount] = useState(0);
 
   const nameRef = useRef(null);
-  const priceRef = useRef(null);
+  const DiffRef = useRef(null);
+  const CountRef = useRef(null);
+  const SpiceRef = useRef(null);
+  const TimeRef = useRef(null);
+  const MealRef = useRef(null);
+  const MethodRef = useRef(null);
+
 
   const navigate = useNavigate();
 
@@ -31,13 +37,7 @@ function UpdatePage() {
   const handleFieldChange = async (field, value) => {
     if (!item) return;
 
-    if (field === "price" && (value === "" || Number(value) <= 0)) {
-      alert("Price는 0보다 큰 값이어야 합니다.");
-      priceRef.current?.focus();
-      return;
-    }
-
-    const updated = { ...item, [field]: field === "price" ? Number(value) : value };
+    const updated = { ...item, [field]: value };
 
 
     setItem(updated);
@@ -70,39 +70,74 @@ function UpdatePage() {
             ref={nameRef}
             type="text"
             className="form-control"
-            value={item.name}
+            value={item.Name}
             onChange={(e) => handleFieldChange("name", e.target.value)}
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Category</label>
+          <label className="form-label">Difficulty</label>
           <input
+            ref={DiffRef}
             type="text"
             className="form-control"
-            value={item.category}
-            onChange={(e) => handleFieldChange("category", e.target.value)}
+            value={item.Difficulty}
+            onChange={(e) => handleFieldChange("difficulty", e.target.value)}
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Price</label>
+          <label className="form-label">Country</label>
           <input
-            ref={priceRef}
-            type="number"
+            ref={CountRef} 
+            type="text"
             className="form-control"
-            value={item.price}
-            onChange={(e) => handleFieldChange("price", e.target.value)}
+            value={item.Country}
+            onChange={(e) => handleFieldChange("Country", e.target.value)}
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Status</label>
+          <label className="form-label">Spicy Level</label>
           <input
+            ref={SpiceRef} 
             type="text"
             className="form-control"
-            value={item.status}
-            onChange={(e) => handleFieldChange("status", e.target.value)}
+            value={item.SpicyLevel}
+            onChange={(e) => handleFieldChange("SpicyLevel", e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Cooking Time</label>
+          <input
+            ref={TimeRef} 
+            type="text"
+            className="form-control"
+            value={item.CookingTime}
+            onChange={(e) => handleFieldChange("CookingTime", e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Meal or Dessert</label>
+          <input
+            ref={MealRef} 
+            type="text"
+            className="form-control"
+            value={item.MealorDessert}
+            onChange={(e) => handleFieldChange("MealorDessert", e.target.value)} 
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Cooking Method</label>
+          <input
+            ref={MethodRef} 
+            type="text"
+            className="form-control"
+            value={item.CookingMethod}
+            onChange={(e) => handleFieldChange("CookingMethod", e.target.value)}
           />
         </div>
 
