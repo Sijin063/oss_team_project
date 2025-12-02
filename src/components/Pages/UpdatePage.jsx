@@ -131,7 +131,7 @@ function UpdatePage() {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Cooking Method</label>
+          <label className="form-label">Ingredient</label>
           <input
             ref={MethodRef} 
             type="text"
@@ -146,7 +146,7 @@ function UpdatePage() {
           className="btn btn-secondary"
           onClick={() => navigate(-1)}
         >
-          Back
+          Save
         </button>
       </form>
     </div>

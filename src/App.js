@@ -5,6 +5,7 @@ import ListPage from "./components/Pages/ListPage";
 import DetailPage from "./components/Pages/DetailPage";
 import CreatePage from "./components/Pages/CreatePage";
 import UpdatePage from "./components/Pages/UpdatePage";
+import MyListPage from "./components/Pages/MyListPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/detail" element={<DetailPage />} />
           <Route path="/create" element={<CreatePage />} />
           <Route path="/update" element={<UpdatePage />} />
+          <Route path="/mylist" element={<MyListPage />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -1,87 +1,107 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchMenus, deleteMenu } from "../api";
+import { searchMeals, filterByArea } from "../api";
 
 function ListPage() {
-  const [items, setItems] = useState([]);
+  const [meals, setMeals] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [area, setArea] = useState("");
   const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
+  // 최초 로딩 시 기본 검색
   useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await fetchMenus();
-        setItems(data);
-      } catch (e) {
-        alert("메뉴 목록을 가져오는 데 실패했습니다.");
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+    loadMeals();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+  const loadMeals = async () => {
     try {
-      await deleteMenu(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
+      setLoading(true);
+      const data = await searchMeals(keyword);
+      setMeals(data);
     } catch (e) {
-      alert("삭제 중 오류가 발생했습니다.");
+      alert("TheMealDB 데이터를 불러오지 못했습니다.");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    loadMeals();
+  };
+
+  const handleFilter = async () => {
+    if (!area) return alert("나라를 입력하세요");
+    const data = await filterByArea(area);
+    setMeals(data);
   };
 
   if (loading) return <p>Loading...</p>;
 
   return (
     <div>
-      <h1 className="mb-3">Restaurant Menu</h1>
-
       <button
-        className="btn btn-primary mb-3"
-        onClick={() => navigate("/create")}
+        className="btn btn-success mb-3"
+        onClick={() => navigate("/mylist")}
       >
-        Add Menu
+        Go to My Recipe List
       </button>
 
+      <h1 className="mb-3">Recipe Search</h1>
+
+      {/* 검색 */}
+      <div className="mb-3">
+        <input
+          className="form-control"
+          placeholder="Search recipe name (ex: pasta)"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+        <button className="btn btn-primary mt-2" onClick={handleSearch}>
+          Search
+        </button>
+      </div>
+
+      {/* 나라 필터 */}
+      <div className="mb-3">
+        <input
+          className="form-control"
+          placeholder="Filter by country (ex: Korean)"
+          value={area}
+          onChange={(e) => setArea(e.target.value)}
+        />
+        <button className="btn btn-secondary mt-2" onClick={handleFilter}>
+          Filter by Country
+        </button>
+      </div>
+
+      {/* 리스트 */}
       <table className="table table-striped table-bordered text-center">
         <thead className="table-dark">
           <tr>
-            <th>ID</th>
-            <th>Menu Name</th>
-            <th>Difficulty</th>
-            <th>Cooking Time</th>
-            <th>Cooking Method</th>
-            <th>Actions</th>
+            <th>Image</th>
+            <th>Recipe Name</th>
+            <th>Country</th>
+            <th>Category</th>
+            <th>Detail</th>
           </tr>
         </thead>
-      <tbody>
-        {items.map((m) => (
-            <tr key={m.id}>
-            <td>{m.id}</td>
-            <td>{m.Name}</td>
-            <td>{m.Difficulty}</td>
-            <td>${m.CookingTime}</td>
-            <td>{m.CookingMethod}</td>
-            <td>
+        <tbody>
+          {meals.map((m) => (
+            <tr key={m.idMeal}>
+              <td>
+                <img src={m.strMealThumb} width="80" alt={m.strMeal} />
+              </td>
+              <td>{m.strMeal}</td>
+              <td>{m.strArea || "-"}</td>
+              <td>{m.strCategory || "-"}</td>
+              <td>
                 <button
-                  className="btn btn-sm btn-info me-2"
-                  onClick={() => navigate(`/detail?id=${m.id}`)}
+                  className="btn btn-sm btn-info"
+                  onClick={() => navigate(`/detail?mealId=${m.idMeal}`)}
                 >
-                  Detail
-                </button>
-                <button
-                  className="btn btn-sm btn-warning me-2"
-                  onClick={() => navigate(`/update?id=${m.id}`)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => handleDelete(m.id)}
-                >
-                  Delete
+                  View
                 </button>
               </td>
             </tr>

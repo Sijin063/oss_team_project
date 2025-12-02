@@ -36,7 +36,7 @@ function DetailPage() {
             <p><strong>Spicy Level:</strong> {item.SpicyLevel}</p>
             <p><strong>Cooking Time:</strong> {item.CookingTime}</p>
             <p><strong>Meal or Dessert:</strong> {item.MealorDessert}</p>
-            <p><strong>Cooking Method:</strong> {item.CookingMethod}</p>
+            <p><strong>Ingredient:</strong> {item.CookingMethod}</p>
         </div>
       </div>
       <button className="btn btn-secondary mt-3" onClick={() => navigate(-1)}>

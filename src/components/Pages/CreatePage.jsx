@@ -1,185 +1,107 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createMenu } from "../api";
 
 function CreatePage() {
-
-  const [name, setName] = useState("");
-  const [Difficulty, setDifficulty] = useState("");
-  const [Country, setCountry] = useState("");
-  const [SpicyLevel, setSpicyLevel] = useState("");
-  const [CookingTime, setCookingTime] = useState("");
-  const [MealorDessert, setMealorDessert] = useState("");
-  const [CookingMethod, setCookingMethod] = useState("");
-
-  const nameRef = useRef(null);
-  const DiffRef = useRef(null);
-  const CountRef = useRef(null);
-  const SpiceRef = useRef(null);
-  const TimeRef = useRef(null);
-  const MealRef = useRef(null);
-  const MethodRef = useRef(null);
+  const [keyword, setKeyword] = useState("");
+  const [meals, setMeals] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // ✅ TheMealDB 검색
+  const searchMeal = async () => {
+    if (!keyword.trim()) return alert("검색어를 입력하세요.");
 
-    if (!name.trim()) {
-      alert("Menu Name을 입력하세요.");
-      nameRef.current?.focus();
+    const res = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${keyword}`
+    );
+    const data = await res.json();
+
+    if (!data.meals) {
+      alert("검색 결과가 없습니다.");
+      setMeals([]);
       return;
     }
 
-    if (!Difficulty.trim()) {
-      alert("요리 난이도를 입력하세요.");
-      DiffRef.current?.focus();
+    setMeals(data.meals);
+  };
+
+  // ✅ 선택한 음식 → 자동 입력
+  const selectMeal = (meal) => {
+    setSelected({
+      Name: meal.strMeal,
+      Country: meal.strArea,
+      CookingMethod: meal.strCategory,
+      Difficulty: "Normal",
+      CookingTime: "Unknown",
+      MealorDessert: "Meal",
+      SpicyLevel: "Normal",
+    });
+  };
+
+  // ✅ 저장 (MockAPI)
+  const handleSave = async () => {
+    if (!selected) {
+      alert("음식을 선택하세요.");
       return;
     }
 
-    if (!Country.trim()) {
-      alert("요리 난이도를 입력하세요.");
-      CountRef.current?.focus();
-      return;
-    }
-
-    if (!SpicyLevel.trim()) {
-      alert("매운맛 정도를 입력하세요.");
-      SpiceRef.current?.focus();
-      return;
-    }
-
-    if (!CookingTime.trim()) {
-      alert("요리 시간을 입력하세요.");
-      TimeRef.current?.focus();
-      return;
-    }
-
-    if (!MealorDessert.trim()) {
-      alert("식사 또는 디저트를 입력하세요.");
-      MealRef.current?.focus();
-      return;
-    }
-
-    if (!CookingMethod.trim()) {
-      alert("조리 방법을 입력하세요.");
-      MethodRef.current?.focus();
-      return;
-    }
-
-    const newItem = {
-        Name: name,
-        Difficulty: Difficulty,
-        Country: Country,
-        SpicyLevel: SpicyLevel,
-        CookingTime: CookingTime,
-        MealorDessert: MealorDessert,
-        CookingMethod: CookingMethod,
-    };
-
-    
     try {
-      await createMenu(newItem);
-      alert("메뉴가 추가되었습니다.");
-      navigate("/list");
-    } catch (e) {
-      alert("추가 중 오류가 발생했습니다.");
+      await createMenu(selected);
+      alert("내 리스트에 저장되었습니다.");
+      navigate("/mylist");
+    } catch {
+      alert("저장 실패");
     }
   };
 
   return (
     <div>
-      <h2>Add Menu</h2>
-      <form className="mt-3" onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Menu Name</label>
-          <input
-            ref={nameRef} 
-            type="text"
-            className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)} // useState
-          />
-        </div>
+      <h2>TheMealDB 레시피 검색</h2>
 
-        <div className="mb-3">
-          <label className="form-label">Difficulty</label>
-          <input
-            ref={DiffRef} 
-            type="text"
-            className="form-control"
-            value={Difficulty}
-            onChange={(e) => setDifficulty(e.target.value)} 
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Country</label>
-          <input
-            ref={CountRef} 
-            type="text"
-            className="form-control"
-            value={Country}
-            onChange={(e) => setCountry(e.target.value)} 
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Spicy Level</label>
-          <input
-            ref={SpiceRef} 
-            type="text"
-            className="form-control"
-            value={SpicyLevel}
-            onChange={(e) => setSpicyLevel(e.target.value)} 
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Cooking Time</label>
-          <input
-            ref={TimeRef} 
-            type="text"
-            className="form-control"
-            value={CookingTime}
-            onChange={(e) => setCookingTime(e.target.value)} 
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Meal or Dessert</label>
-          <input
-            ref={MealRef} 
-            type="text"
-            className="form-control"
-            value={MealorDessert}
-            onChange={(e) => setMealorDessert(e.target.value)} 
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Cooking Method</label>
-          <input
-            ref={MethodRef} 
-            type="text"
-            className="form-control"
-            value={CookingMethod}
-            onChange={(e) => setCookingMethod(e.target.value)} 
-          />
-        </div>
-
-
-        <button type="submit" className="btn btn-primary me-2">
-          Save
+      <div className="input-group mb-3">
+        <input
+          className="form-control"
+          placeholder="예: chicken, pasta"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+        <button className="btn btn-primary" onClick={searchMeal}>
+          Search
         </button>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => navigate(-1)}
-        >
-          Cancel
-        </button>
-      </form>
+      </div>
+
+      {/* ✅ 검색 결과 */}
+      <ul className="list-group mb-3">
+        {meals.map((meal) => (
+          <li
+            key={meal.idMeal}
+            className="list-group-item list-group-item-action"
+            onClick={() => selectMeal(meal)}
+            style={{ cursor: "pointer" }}
+          >
+            {meal.strMeal} ({meal.strArea})
+          </li>
+        ))}
+      </ul>
+
+      {/* ✅ 선택된 음식 정보 */}
+      {selected && (
+        <div className="card p-3">
+          <h5>선택한 메뉴</h5>
+          <p>🍽 Name: {selected.Name}</p>
+          <p>🌍 Country: {selected.Country}</p>
+          <p>🍳 Method: {selected.CookingMethod}</p>
+          <p>🔥 Spicy: {selected.SpicyLevel}</p>
+          <p>⏱ Time: {selected.CookingTime}</p>
+          <p>📌 Type: {selected.MealorDessert}</p>
+
+          <button className="btn btn-success" onClick={handleSave}>
+            Save to My List
+          </button>
+        </div>
+      )}
     </div>
   );
 }
