@@ -1,0 +1,95 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchMenus, deleteMenu } from "../api";
+
+function ListPage() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await fetchMenus();
+        setItems(data);
+      } catch (e) {
+        alert("메뉴 목록을 가져오는 데 실패했습니다.");
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+    try {
+      await deleteMenu(id);
+      setItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (e) {
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+
+  return (
+    <div>
+      <h1 className="mb-3">Restaurant Menu</h1>
+
+      <button
+        className="btn btn-primary mb-3"
+        onClick={() => navigate("/create")}
+      >
+        Add Menu
+      </button>
+
+      <table className="table table-striped table-bordered text-center">
+        <thead className="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Menu Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+      <tbody>
+        {items.map((m) => (
+            <tr key={m.id}>
+            <td>{m.id}</td>
+            <td>{m.MenuName}</td>
+            <td>{m.Category}</td>
+            <td>${m.Price}</td>
+            <td>{m.Status}</td>
+            <td>
+                <button
+                  className="btn btn-sm btn-info me-2"
+                  onClick={() => navigate(`/detail?id=${m.id}`)}
+                >
+                  Detail
+                </button>
+                <button
+                  className="btn btn-sm btn-warning me-2"
+                  onClick={() => navigate(`/update?id=${m.id}`)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => handleDelete(m.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default ListPage;
