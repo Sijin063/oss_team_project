@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchMeals, filterByArea, createMenu } from "../api";
 
@@ -10,11 +10,7 @@ function ListPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadMeals();
-  }, []);
-
-  const loadMeals = async () => {
+  const loadMeals = useCallback(async () => {
     try {
       setLoading(true);
       const data = await searchMeals(keyword);
@@ -24,7 +20,11 @@ function ListPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [keyword]);
+
+  useEffect(() => {
+    loadMeals();
+  }, [loadMeals]);
 
   const handleSearch = () => loadMeals();
 
